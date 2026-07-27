@@ -57,3 +57,30 @@ DOMAIN-SUFFIX,th.bing.com
 DOMAIN-SUFFIX,mm.bing.net
 DOMAIN-SUFFIX,mm.bing.com
 DOMAIN-SUFFIX,th.bing.net
+
+# 微软
+# ========== 1. 微软个人账户登录/验证核心域名（解锁、人机验证、密码重置必走直连）
+DOMAIN,account.live.com
+DOMAIN,login.live.com
+DOMAIN,account.microsoft.com
+DOMAIN,login.microsoft.com
+
+# ========== 2. Outlook个人邮箱主站（网页版收发邮件）
+DOMAIN,outlook.live.com
+DOMAIN,outlook.office.com
+DOMAIN-SUFFIX,outlook.com
+DOMAIN-SUFFIX,hotmail.com
+DOMAIN-SUFFIX,live.com
+DOMAIN-SUFFIX,msn.com
+
+# ========== 3. 世纪互联国内版Office365（纯国内直连服务器）
+DOMAIN-SUFFIX,microsoftonline.cn
+DOMAIN-SUFFIX,office365.com.cn
+DOMAIN-SUFFIX,officewebapps.cn
+
+# ========== 4. Office/微软通用静态资源、云服务、验证资源
+DOMAIN-SUFFIX,microsoft.com
+DOMAIN-SUFFIX,office.com
+DOMAIN-SUFFIX,cloud.microsoft
+DOMAIN-SUFFIX,onedrive.live.com
+DOMAIN-SUFFIX,protection.outlook.com
