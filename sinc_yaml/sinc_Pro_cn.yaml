@@ -28,21 +28,14 @@ x-filter-sg:    &filter-sg    "(?i)新|sg|singapore|🇸🇬"
 x-filter-kr:    &filter-kr    "(?i)韩|kr|korea|seoul|🇰🇷"
 x-filter-us:    &filter-us    "(?i)美|us|usa|america|united states|🇺🇸"
 
-x-filter-ct:    &filter-ct    "电信"
-x-filter-cu:    &filter-cu    "联通"
-x-filter-cm:    &filter-cm    "移动"
-x-filter-yx:    &filter-yx    "优选域名"
-x-filter-ipv6:  &filter-ipv6  "(?i)ipv6"  # (?i)代表忽略大小写
-
-
-
-x-oversea:      &oversea      [故障转移, 全球手动, 优选域名策略, 电信策略, 联通策略, 移动策略, IPv6策略, 香港策略, 台湾策略, 日本策略, 狮城策略, 韩国策略, 美国策略, DIRECT]
-x-direct:       &direct       [DIRECT, 优选域名策略, 电信策略, 联通策略, 移动策略, IPv6策略, 故障转移, 全球手动, 香港策略, 台湾策略, 日本策略, 狮城策略, 韩国策略, 美国策略]
-x-us-first:     &us-first     [美国策略, 优选域名策略, 电信策略, 联通策略, 移动策略, IPv6策略, 故障转移, 全球手动, 香港策略, 台湾策略, 日本策略, 狮城策略, 韩国策略, DIRECT]
-x-hk-first:     &hk-first     [香港策略, 优选域名策略, 电信策略, 联通策略, 移动策略, IPv6策略, 故障转移, 全球手动, 台湾策略, 日本策略, 狮城策略, 韩国策略, 美国策略, DIRECT]
-x-sg-first:     &sg-first     [狮城策略, 优选域名策略, 电信策略, 联通策略, 移动策略, IPv6策略, 故障转移, 全球手动, 香港策略, 台湾策略, 日本策略, 韩国策略, 美国策略, DIRECT]
-x-jp-first:     &jp-first     [日本策略, 优选域名策略, 电信策略, 联通策略, 移动策略, IPv6策略, 故障转移, 全球手动, 香港策略, 台湾策略, 狮城策略, 韩国策略, 美国策略, DIRECT]
-x-yx-first:     &yx-first     [优选域名策略, 电信策略, 联通策略, 移动策略, IPv6策略, 故障转移, 全球手动, 香港策略, 台湾策略, 日本策略, 狮城策略, 韩国策略, 美国策略, DIRECT]
+x-oversea:      &oversea      [故障转移, 全球手动, 香港策略, 台湾策略, 日本策略, 狮城策略, 韩国策略, 美国策略, DIRECT]
+x-direct:       &direct       [DIRECT, 故障转移, 全球手动, 香港策略, 台湾策略, 日本策略, 狮城策略, 韩国策略, 美国策略]
+x-us-first:     &us-first     [美国策略, 故障转移, 全球手动, 香港策略, 台湾策略, 日本策略, 狮城策略, 韩国策略, DIRECT]
+x-hk-first:     &hk-first     [香港策略, 故障转移, 全球手动, 台湾策略, 日本策略, 狮城策略, 韩国策略, 美国策略, DIRECT]
+x-tw-first:     &tw-first     [台湾策略, 香港策略, 故障转移, 全球手动, 日本策略, 狮城策略, 韩国策略, 美国策略, DIRECT]
+x-sg-first:     &sg-first     [狮城策略, 故障转移, 全球手动, 香港策略, 台湾策略, 日本策略, 韩国策略, 美国策略, DIRECT]
+x-jp-first:     &jp-first     [日本策略, 故障转移, 全球手动, 香港策略, 台湾策略, 狮城策略, 韩国策略, 美国策略, DIRECT]
+x-kr-first:     &kr-first     [韩国策略, 故障转移, 全球手动, 香港策略, 台湾策略, 日本策略, 狮城策略, 美国策略, DIRECT]
 
 
 x-rule-set-domain: &rule-set-domain { type: http, behavior: domain, format: mrs, interval: 86400 }
@@ -54,6 +47,7 @@ proxy-providers:
   优质服务商: {<<: *base-provider, url: '优质订阅源地址', override: {additional-prefix: '[优] '}}
   # 备用订阅源 - 次优节点集合，使用时请修改
   备用服务商: {<<: *base-provider, url: '备用订阅源地址', override: {additional-prefix: '[备] '}}
+
 
 # 自定义代理节点
 proxies:
@@ -126,24 +120,24 @@ proxy-groups:
   - { name: 广告拦截, type: select, proxies: [REJECT-DROP, REJECT, DIRECT], icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Reject.png }
   - { name: 网络测试, type: select, proxies: *oversea, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Speedtest.png }
   - { name: 即时通讯, type: select, proxies: *sg-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Telegram_X.png }
-  - { name: 社交平台, type: select, proxies: *us-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Twitter.png }
+  - { name: 社交平台, type: select, proxies: *jp-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Twitter.png }
   - { name: 人工智能, type: select, proxies: *us-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/AI.png }
-  - { name: 开发服务, type: select, proxies: *us-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/GitHub.png }
+  - { name: 开发服务, type: select, proxies: *hk-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/GitHub.png }
   - { name: EMBY,    type: select, proxies: *us-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Emby.png }
-  - { name: 国际媒体, type: select, proxies: *us-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Streaming.png }
+  - { name: 国际媒体, type: select, proxies: *tw-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Streaming.png }
   - { name: Steam服务, type: select, proxies: *hk-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Steam.png }
-  - { name: 游戏平台, type: select, proxies: *sg-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Game.png }
+  - { name: 游戏平台, type: select, proxies: *us-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Game.png }
   - { name: 货币平台, type: select, proxies: *jp-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Cryptocurrency_3.png }
   - { name: 谷歌服务, type: select, proxies: *us-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Google_Search.png }
-  - { name: 脸书服务, type: select, proxies: *us-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Facebook.png }
-  - { name: 微软服务, type: select, proxies: *us-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Microsoft.png }
+  - { name: 脸书服务, type: select, proxies: *jp-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Facebook.png }
+  - { name: 微软服务, type: select, proxies: *kr-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Microsoft.png }
   - { name: 苹果服务, type: select, proxies: *direct, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Apple_1.png }
-  - { name: 国外流量, type: select, proxies: *oversea, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Global.png }
+  - { name: 国外流量, type: select, proxies: *jp-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Global.png }
   - { name: 国内流量, type: select, proxies: *direct, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/China.png }
   - { name: 漏网之鱼, type: select, proxies: *oversea, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Final.png }
   
   # 自动选择
-  - { name: 故障转移, <<: *fallback, proxies: [美国策略, 日本策略, 狮城策略, 韩国策略, 香港策略, 台湾策略, 优选域名策略, 电信策略, 联通策略, 移动策略, IPv6策略], icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/ULB.png }
+  - { name: 故障转移, <<: *fallback, proxies: [日本策略, 美国策略,狮城策略, 韩国策略, 香港策略, 台湾策略], icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/ULB.png }
 
   # 手动选择
   - { name: 全球手动, type: select, include-all: true, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Clubhouse.png }
@@ -155,12 +149,6 @@ proxy-groups:
   - { name: 狮城策略, type: select, include-all: true, filter: *filter-sg, proxies: [狮城自动, 狮城均衡], icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Singapore.png }
   - { name: 韩国策略, type: select, include-all: true, filter: *filter-kr, proxies: [韩国自动, 韩国均衡], icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Korea.png }
   - { name: 美国策略, type: select, include-all: true, filter: *filter-us, proxies: [美国自动, 美国均衡], icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/United_States.png }
-  # === 运营商优选策略 ===
-  - { name: 优选域名策略, type: select, include-all: true, filter: *filter-yx, proxies: [优选域名自动, 优选域名均衡], icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Server.png }
-  - { name: 电信策略, type: select, include-all: true, filter: *filter-ct, proxies: [电信自动, 电信均衡], icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Server.png }
-  - { name: 联通策略, type: select, include-all: true, filter: *filter-cu, proxies: [联通自动, 联通均衡], icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Server.png }
-  - { name: 移动策略, type: select, include-all: true, filter: *filter-cm, proxies: [移动自动, 移动均衡], icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Server.png }
-  - { name: IPv6策略, type: select, include-all: true, filter: *filter-ipv6, proxies: [IPv6自动, IPv6均衡], icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Server.png }
   
   # 自动测速
   - { name: 香港自动, <<: *url-test, filter: *filter-hk, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png }
@@ -169,12 +157,6 @@ proxy-groups:
   - { name: 狮城自动, <<: *url-test, filter: *filter-sg, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png }
   - { name: 韩国自动, <<: *url-test, filter: *filter-kr, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png }
   - { name: 美国自动, <<: *url-test, filter: *filter-us, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png }
-  # === 运营商自动测速 ===
-  - { name: 电信自动, <<: *url-test, filter: *filter-ct, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png }
-  - { name: 联通自动, <<: *url-test, filter: *filter-cu, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png }
-  - { name: 移动自动, <<: *url-test, filter: *filter-cm, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png }
-  - { name: 优选域名自动, <<: *url-test, filter: *filter-yx, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png }
-  - { name: IPv6自动, <<: *url-test, filter: *filter-ipv6, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png }
 
   # 负载均衡
   - { name: 香港均衡, <<: *load-balance, filter: *filter-hk, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png }
@@ -183,12 +165,7 @@ proxy-groups:
   - { name: 狮城均衡, <<: *load-balance, filter: *filter-sg, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png }
   - { name: 韩国均衡, <<: *load-balance, filter: *filter-kr, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png }
   - { name: 美国均衡, <<: *load-balance, filter: *filter-us, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png }
-  # === 运营商负载均衡-散列 ===
-  - { name: 电信均衡, <<: *load-balance, filter: *filter-ct, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png }
-  - { name: 联通均衡, <<: *load-balance, filter: *filter-cu, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png }
-  - { name: 移动均衡, <<: *load-balance, filter: *filter-cm, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png }
-  - { name: 优选域名均衡, <<: *load-balance, filter: *filter-yx, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png }
-  - { name: IPv6均衡, <<: *load-balance, filter: *filter-ipv6, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png }
+
 
 # 规则路由
 rules:
@@ -198,7 +175,6 @@ rules:
   - RULE-SET,sinc_steam_proxy,Steam服务
   - RULE-SET,sinc_direct,DIRECT
   - RULE-SET,sinc_proxy,国外流量
-
   
   # 广告拦截
   - RULE-SET,Tracking,广告拦截
@@ -264,7 +240,6 @@ rule-providers:
   sinc_proxy:  { <<: *rule-set-class, url: "https://gh-proxy.com/raw.githubusercontent.com/SincReaper/sinc-rule/main/sinc_rule/sinc_proxy.list" }
   sinc_steam_direct: { <<: *rule-set-class, url: "https://gh-proxy.com/raw.githubusercontent.com/SincReaper/sinc-rule/main/sinc_rule/sinc_steam_direct.list" }
   sinc_steam_proxy:  { <<: *rule-set-class, url: "https://gh-proxy.com/raw.githubusercontent.com/SincReaper/sinc-rule/main/sinc_rule/sinc_steam_proxy.list" }
-  
   # 域名规则
   Tracking:       { <<: *rule-set-domain, url: https://github.com/666OS/rules/raw/release/mihomo/domain/Tracking.mrs }
   Advertising:    { <<: *rule-set-domain, url: https://github.com/666OS/rules/raw/release/mihomo/domain/Advertising.mrs } 
