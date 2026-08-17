@@ -8,7 +8,7 @@
 # ||   ╚══════╝    ╚═╝    ╚═╝  ╚═══╝     ╚═════╝      ||
 # ||                                                  ||
 # >>==================================================<<
-# Pro 中文版 v2.0.3 by YYDS666-sinc (2026-06-16)
+# Pro 中文版 v2.0.3 by YYDS666-sinc (2026-08-17)
 # 本 yaml 文件是在作者 YYDS666 上修改的，有原文件兴趣直接去原作者的 GitHub:https://github.com/666OS/YYDS
 # 名称: sinc-MihomoPro 高大全版
 # 地址: https://github.com/SincReaper/sinc-rule
@@ -112,7 +112,7 @@ dns:
   fake-ip-range: 198.18.0.1/16
   default-nameserver: [119.29.29.29, 180.184.1.1, 223.5.5.5]
   nameserver: [https://dns.alidns.com/dns-query, https://doh.pub/dns-query]
-  fake-ip-filter: [+.miwifi.com, +.docker.io, +.market.xiaomi.com, +.push.apple.com]
+  fake-ip-filter: [+.miwifi.com, +.docker.io, +.market.xiaomi.com, +.push.apple.com, +.localhost, +.local, +.lan]
 
 # 代理策略组
 proxy-groups:
@@ -126,6 +126,7 @@ proxy-groups:
   - { name: EMBY,    type: select, proxies: *us-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Emby.png }
   - { name: 国际媒体, type: select, proxies: *tw-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Streaming.png }
   - { name: Steam服务, type: select, proxies: *hk-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Steam.png }
+  - { name: Google服务, type: select, proxies: *us-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Google_Search.png }
   - { name: 游戏平台, type: select, proxies: *us-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Game.png }
   - { name: 货币平台, type: select, proxies: *jp-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Cryptocurrency_3.png }
   - { name: 谷歌服务, type: select, proxies: *us-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Google_Search.png }
@@ -173,13 +174,13 @@ rules:
   # === Sinc 自定义规则 ===
   - RULE-SET,sinc_steam_direct,DIRECT
   - RULE-SET,sinc_steam_proxy,Steam服务
+  - RULE-SET,sinc_Google_proxy,Google服务
   - RULE-SET,sinc_direct,DIRECT
   - RULE-SET,sinc_proxy,国外流量
   
   # 广告拦截
   - RULE-SET,Tracking,广告拦截
   - RULE-SET,Advertising,广告拦截
-  - AND,((NETWORK,UDP),(DST-PORT,443),(NOT,((GEOIP,CN,no-resolve)))),广告拦截
   
   # 本地/私有
   - RULE-SET,Private,DIRECT
@@ -196,6 +197,13 @@ rules:
   # 社交平台
   - RULE-SET,SocialMedia,社交平台
   - RULE-SET,SocialMediaIP,社交平台,no-resolve
+
+  # 谷歌服务
+  - RULE-SET,Google,谷歌服务
+  - RULE-SET,GoogleIP,谷歌服务,no-resolve
+  - RULE-SET,Microsoft,微软服务
+  - RULE-SET,Facebook,脸书服务
+  - RULE-SET,Apple,苹果服务
 
   # 人工智能
   - RULE-SET,AI,人工智能
@@ -216,13 +224,6 @@ rules:
   # 货币平台
   - RULE-SET,Crypto,货币平台
 
-  # 谷歌服务
-  - RULE-SET,Google,谷歌服务
-  - RULE-SET,GoogleIP,谷歌服务,no-resolve
-  - RULE-SET,Microsoft,微软服务
-  - RULE-SET,Facebook,脸书服务
-  - RULE-SET,Apple,苹果服务
-
   # 国外流量
   - RULE-SET,Proxy,国外流量
   - RULE-SET,ProxyIP,国外流量,no-resolve
@@ -240,6 +241,7 @@ rule-providers:
   sinc_proxy:  { <<: *rule-set-class, url: "https://gh-proxy.com/raw.githubusercontent.com/SincReaper/sinc-rule/main/sinc_rule/sinc_proxy.list" }
   sinc_steam_direct: { <<: *rule-set-class, url: "https://gh-proxy.com/raw.githubusercontent.com/SincReaper/sinc-rule/main/sinc_rule/sinc_steam_direct.list" }
   sinc_steam_proxy:  { <<: *rule-set-class, url: "https://gh-proxy.com/raw.githubusercontent.com/SincReaper/sinc-rule/main/sinc_rule/sinc_steam_proxy.list" }
+  sinc_Google_proxy: { <<: *rule-set-class, url: "https://gh-proxy.com/raw.githubusercontent.com/SincReaper/sinc-rule/main/sinc_rule/sinc_Google_proxy.list" }
   # 域名规则
   Tracking:       { <<: *rule-set-domain, url: https://github.com/666OS/rules/raw/release/mihomo/domain/Tracking.mrs }
   Advertising:    { <<: *rule-set-domain, url: https://github.com/666OS/rules/raw/release/mihomo/domain/Advertising.mrs } 
