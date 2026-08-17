@@ -125,7 +125,7 @@ proxy-groups:
   - { name: 开发服务, type: select, proxies: *hk-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/GitHub.png }
   - { name: EMBY,    type: select, proxies: *us-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Emby.png }
   - { name: 国际媒体, type: select, proxies: *tw-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Streaming.png }
-  - { name: Steam服务, type: select, proxies: *hk-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Steam.png }
+  - { name: Steam服务, type: select, proxies: *direct, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Steam.png }
   - { name: Google服务, type: select, proxies: *us-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Google_Search.png }
   - { name: 游戏平台, type: select, proxies: *us-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Game.png }
   - { name: 货币平台, type: select, proxies: *jp-first, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Cryptocurrency_3.png }
