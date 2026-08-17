@@ -1,0 +1,219 @@
+# >>==================================================<<
+# ||                                                  ||
+# ||   ███████╗    ██╗    ███╗   ██╗     ██████╗      ||
+# ||   ██╔════╝    ██║    ████╗  ██║    ██╔════╝      ||
+# ||   ███████╗    ██║    ██╔██╗ ██║    ██║           ||
+# ||   ╚════██║    ██║    ██║╚██╗██║    ██║           ||
+# ||   ███████║    ██║    ██║ ╚████║    ╚██████╗      ||
+# ||   ╚══════╝    ╚═╝    ╚═╝  ╚═══╝     ╚═════╝      ||
+# ||                                                  ||
+# >>==================================================<<
+# Pro 中文版 v2.0.3 by Aethersailor-sinc (2026-08-17)
+# 名称: sinc-MihomoPro 高大全版
+
+# 锚点配置
+x-base-provider: &base-provider {type: http, interval: 86400, health-check: {enable: true, url: 'https://www.google.com/generate_204', interval: 300}, filter: '^(?!.*(群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author))'}
+
+x-url-test:     &url-test     { type: url-test, url: "https://www.gstatic.com/generate_204", interval: 300, empty-fallback: REJECT, include-all: true, hidden: true, tolerance: 50 }
+x-load-balance: &load-balance { type: load-balance, url: "https://www.gstatic.com/generate_204", interval: 300, empty-fallback: REJECT, include-all: true, hidden: true, strategy: consistent-hashing }
+x-fallback:     &fallback     { type: fallback, url: "https://www.gstatic.com/generate_204", interval: 300, empty-fallback: REJECT }
+
+x-filter-hk:    &filter-hk    "(?i)港|hk|hongkong|hong kong"
+x-filter-tw:    &filter-tw    "(?i)台|tw|taiwan|taipei"
+x-filter-jp:    &filter-jp    "(?i)日|jp|japan|tokyo"
+x-filter-sg:    &filter-sg    "(?i)新|sg|singapore"
+x-filter-kr:    &filter-kr    "(?i)韩|kr|korea|seoul"
+x-filter-us:    &filter-us    "(?i)美|us|usa|america|united states"
+
+x-oversea:      &oversea      [故障转移, 全球手动, 香港策略, 台湾策略, 日本策略, 狮城策略, 韩国策略, 美国策略, DIRECT]
+x-direct:       &direct       [DIRECT, 故障转移, 全球手动, 香港策略, 台湾策略, 日本策略, 狮城策略, 韩国策略, 美国策略]
+x-us-first:     &us-first     [美国策略, 故障转移, 全球手动, 香港策略, 台湾策略, 日本策略, 狮城策略, 韩国策略, DIRECT]
+x-hk-first:     &hk-first     [香港策略, 故障转移, 全球手动, 台湾策略, 日本策略, 狮城策略, 韩国策略, 美国策略, DIRECT]
+x-tw-first:     &tw-first     [台湾策略, 香港策略, 故障转移, 全球手动, 日本策略, 狮城策略, 韩国策略, 美国策略, DIRECT]
+x-sg-first:     &sg-first     [狮城策略, 故障转移, 全球手动, 香港策略, 台湾策略, 日本策略, 韩国策略, 美国策略, DIRECT]
+x-jp-first:     &jp-first     [日本策略, 故障转移, 全球手动, 香港策略, 台湾策略, 狮城策略, 韩国策略, 美国策略, DIRECT]
+x-kr-first:     &kr-first     [韩国策略, 故障转移, 全球手动, 香港策略, 台湾策略, 日本策略, 狮城策略, 美国策略, DIRECT]
+
+x-rule-set-domain: &rule-set-domain { type: http, behavior: domain, format: mrs, interval: 28800 }
+x-rule-set-ipcidr: &rule-set-ipcidr { type: http, behavior: ipcidr, format: mrs, interval: 28800 }
+x-rule-set-class: &rule-set-class { type: http, behavior: classical, format: yaml, interval: 28800 }
+
+proxy-providers:
+  优质服务商: {<<: *base-provider, url: '优质订阅源地址', override: {additional-prefix: '[优] '}}
+  备用服务商: {<<: *base-provider, url: '备用订阅源地址', override: {additional-prefix: '[备] '}}
+
+proxies: []
+
+# 基础设置
+mode: rule
+port: 7890
+socks-port: 7891
+redir-port: 7892
+mixed-port: 7893
+tproxy-port: 7895
+ipv6: false
+allow-lan: true
+unified-delay: true
+tcp-concurrent: true
+log-level: silent
+bind-address: '*'
+find-process-mode: 'always'
+keep-alive-interval: 15
+keep-alive-idle: 600
+authentication: [mihomo:yyds666]
+skip-auth-prefixes: [127.0.0.1/8, '::1/128']
+experimental: {quic-go-disable-gso: true}
+
+# 控制面板
+external-ui-url: https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip
+external-ui-name: zashboard
+external-ui: ui
+external-controller: 0.0.0.0:9090
+secret: yyds666-sinc
+profile: {store-selected: true, store-fake-ip: true}
+
+# 流量嗅探
+sniffer:
+  enable: true
+  sniff:
+    HTTP:  {ports: [80, 8080-8880], override-destination: true}
+    TLS:   {ports: [443, 8443]}
+    QUIC:  {ports: [443, 8443]}
+  skip-domain: ["Mijia Cloud", "+.push.apple.com"]
+
+# TUN模式
+tun:
+  enable: false
+  stack: mixed
+  dns-hijack: ["any:53", "tcp://any:53"]
+  auto-route: true
+  auto-redirect: true
+  auto-detect-interface: true
+
+# DNS设置
+dns:
+  enable: true
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  default-nameserver: [119.29.29.29, 180.184.1.1, 223.5.5.5]
+  nameserver: [https://dns.alidns.com/dns-query, https://doh.pub/dns-query]
+  fake-ip-filter: [+.miwifi.com, +.docker.io, +.market.xiaomi.com, +.push.apple.com, +.localhost, +.local, +.lan]
+
+# 代理策略组 
+proxy-groups:
+  # ================= 全局控制与业务服务组 =================
+  - { name: "故障转移", <<: *fallback, proxies: [美国策略, 日本策略, 狮城策略, 韩国策略, 香港策略, 台湾策略], icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/ULB.png" }
+  - { name: "全球手动", type: select, include-all: true, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Clubhouse.png" }
+  - { name: "即时通讯", type: select, proxies: *kr-first, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Telegram.png" }
+  - { name: "社交媒体", type: select, proxies: *jp-first, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Twitter.png" }
+  - { name: "GitHub", type: select, proxies: *hk-first, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/GitHub.png" }
+  - { name: "ChatGPT", type: select, proxies: *us-first, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/ChatGPT.png" }
+  - { name: "AI服务", type: select, proxies: *us-first, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Bot.png" }
+  - { name: "TikTok", type: select, proxies: *sg-first, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/TikTok.png" }
+  - { name: "YouTube", type: select, proxies: *hk-first, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/YouTube.png" }
+  - { name: "Netflix", type: select, proxies: *jp-first, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Netflix.png" }
+  - { name: "DisneyPlus", type: select, proxies: *jp-first, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Disney.png" }
+  - { name: "HBO", type: select, proxies: *us-first, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/HBO.png" }
+  - { name: "PrimeVideo", type: select, proxies: *us-first, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Prime_Video.png" }
+  - { name: "AppleTV+", type: select, proxies: *hk-first, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Apple_TV.png" }
+  - { name: "Emby", type: select, proxies: *oversea, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Emby.png" }
+  - { name: "Spotify", type: select, proxies: *oversea, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Spotify.png" }
+  - { name: "Bahamut", type: select, proxies: *tw-first, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Bahamut.png" }
+  - { name: "国外媒体", type: select, proxies: *sg-first, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Global.png" }
+  - { name: "国外电商", type: select, proxies: *oversea, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Shopping.png" }
+  - { name: "谷歌FCM", type: select, proxies: *direct, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Google_Search.png" }
+  - { name: "谷歌服务", type: select, proxies: *hk-first, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Google_Search.png" }
+  - { name: "苹果服务", type: select, proxies: *direct, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Apple.png" }
+  - { name: "微软服务", type: select, proxies: *direct, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Microsoft.png" }
+  - { name: "游戏平台", type: select, proxies: *direct, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Game.png" }
+  - { name: "Steam", type: select, proxies: *direct, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Steam.png" }
+  - { name: "测速工具", type: select, proxies: *oversea, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Speedtest.png" }
+  - { name: "漏网之鱼", type: select, proxies: *oversea, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Final.png" }
+  - { name: "非标端口", type: select, proxies: ["漏网之鱼", "DIRECT"], icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Port.png" }
+  - { name: "全球直连", type: select, proxies: [DIRECT], icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Direct.png" }
+
+  # ================= 区域策略控制面板 =================
+  - { name: "香港策略", type: select, include-all: true, filter: *filter-hk, proxies: [香港自动, 香港均衡], icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Hong_Kong.png" }
+  - { name: "台湾策略", type: select, include-all: true, filter: *filter-tw, proxies: [台湾自动, 台湾均衡], icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Taiwan.png" }
+  - { name: "日本策略", type: select, include-all: true, filter: *filter-jp, proxies: [日本自动, 日本均衡], icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Japan.png" }
+  - { name: "狮城策略", type: select, include-all: true, filter: *filter-sg, proxies: [狮城自动, 狮城均衡], icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Singapore.png" }
+  - { name: "韩国策略", type: select, include-all: true, filter: *filter-kr, proxies: [韩国自动, 韩国均衡], icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Korea.png" }
+  - { name: "美国策略", type: select, include-all: true, filter: *filter-us, proxies: [美国自动, 美国均衡], icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/United_States.png" }
+
+  # ================= 自动测速组 (url-test) =================
+  - { name: "香港自动", <<: *url-test, filter: *filter-hk, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png" }
+  - { name: "台湾自动", <<: *url-test, filter: *filter-tw, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png" }
+  - { name: "日本自动", <<: *url-test, filter: *filter-jp, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png" }
+  - { name: "狮城自动", <<: *url-test, filter: *filter-sg, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png" }
+  - { name: "韩国自动", <<: *url-test, filter: *filter-kr, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png" }
+  - { name: "美国自动", <<: *url-test, filter: *filter-us, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png" }
+
+  # ================= 负载均衡组 (load-balance) =================
+  - { name: "香港均衡", <<: *load-balance, filter: *filter-hk, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png" }
+  - { name: "台湾均衡", <<: *load-balance, filter: *filter-tw, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png" }
+  - { name: "日本均衡", <<: *load-balance, filter: *filter-jp, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png" }
+  - { name: "狮城均衡", <<: *load-balance, filter: *filter-sg, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png" }
+  - { name: "韩国均衡", <<: *load-balance, filter: *filter-kr, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png" }
+  - { name: "美国均衡", <<: *load-balance, filter: *filter-us, icon: "https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png" }
+
+# ==================== 规则提供者 Rule Providers ====================
+rule-providers:
+  Nonstandard_Port_Direct: { <<: *rule-set-class, url: "https://testingcf.jsdelivr.net/gh/Aethersailor/Custom_OpenClash_Rules@main/rule/Custom_Port_Direct.yaml" }
+  Custom_Direct_Domain:    { <<: *rule-set-domain, url: "https://testingcf.jsdelivr.net/gh/Aethersailor/Custom_OpenClash_Rules@main/rule/Custom_Direct_Domain.mrs" }
+  Custom_Direct_IP:        { <<: *rule-set-ipcidr, url: "https://testingcf.jsdelivr.net/gh/Aethersailor/Custom_OpenClash_Rules@main/rule/Custom_Direct_IP.mrs" }
+  Custom_Direct_Port:      { <<: *rule-set-class, url: "https://testingcf.jsdelivr.net/gh/Aethersailor/Custom_OpenClash_Rules@main/rule/Custom_Direct_Classical_Port.yaml" }
+  Custom_Proxy_Domain:     { <<: *rule-set-domain, url: "https://testingcf.jsdelivr.net/gh/Aethersailor/Custom_OpenClash_Rules@main/rule/Custom_Proxy_Domain.mrs" }
+  Custom_Proxy_IP:         { <<: *rule-set-ipcidr, url: "https://testingcf.jsdelivr.net/gh/Aethersailor/Custom_OpenClash_Rules@main/rule/Custom_Proxy_IP.mrs" }
+  Steam_CDN_Domain:        { <<: *rule-set-domain, url: "https://testingcf.jsdelivr.net/gh/Aethersailor/Custom_OpenClash_Rules@main/rule/Steam_CDN_Domain.mrs" }
+  Steam_CDN_IP:            { <<: *rule-set-ipcidr, url: "https://testingcf.jsdelivr.net/gh/Aethersailor/Custom_OpenClash_Rules@main/rule/Steam_CDN_IP.mrs" }
+
+# ==================== 分流规则 Rules ====================
+rules:
+  - "GEOSITE,private,全球直连"
+  - "GEOIP,private,全球直连,no-resolve"
+  - "RULE-SET,Custom_Direct_Domain,全球直连"
+  - "RULE-SET,Custom_Direct_IP,全球直连,no-resolve"
+  - "RULE-SET,Custom_Direct_Port,全球直连"
+  - "RULE-SET,Custom_Proxy_Domain,故障转移"
+  - "RULE-SET,Custom_Proxy_IP,故障转移,no-resolve"
+  - "GEOSITE,google-cn,全球直连"
+  - "GEOSITE,category-games@cn,全球直连"
+  - "RULE-SET,Steam_CDN_Domain,全球直连"
+  - "RULE-SET,Steam_CDN_IP,全球直连,no-resolve"
+  - "GEOSITE,category-game-platforms-download,全球直连"
+  - "GEOSITE,category-public-tracker,全球直连"
+  - "GEOSITE,category-communication,即时通讯"
+  - "GEOSITE,category-social-media-!cn,社交媒体"
+  - "GEOSITE,openai,ChatGPT"
+  - "GEOSITE,category-ai-!cn,AI服务"
+  - "GEOSITE,github,GitHub"
+  - "GEOSITE,category-speedtest,测速工具"
+  - "GEOSITE,steam,Steam"
+  - "GEOSITE,youtube,YouTube"
+  - "GEOSITE,apple-tvplus,AppleTV+"
+  - "GEOSITE,apple,苹果服务"
+  - "GEOSITE,microsoft,微软服务"
+  - "GEOSITE,googlefcm,谷歌FCM"
+  - "GEOSITE,google,谷歌服务"
+  - "GEOSITE,tiktok,TikTok"
+  - "GEOSITE,netflix,Netflix"
+  - "GEOSITE,disney,DisneyPlus"
+  - "GEOSITE,hbo,HBO"
+  - "GEOSITE,primevideo,PrimeVideo"
+  - "GEOSITE,category-emby,Emby"
+  - "GEOSITE,spotify,Spotify"
+  - "GEOSITE,bahamut,Bahamut"
+  - "GEOSITE,category-games,游戏平台"
+  - "GEOSITE,category-entertainment,国外媒体"
+  - "GEOSITE,category-ecommerce,国外电商"
+  - "GEOSITE,gfw,故障转移"
+  - "GEOIP,telegram,即时通讯,no-resolve"
+  - "GEOIP,twitter,社交媒体,no-resolve"
+  - "GEOIP,facebook,社交媒体,no-resolve"
+  - "GEOIP,google,谷歌服务,no-resolve"
+  - "GEOIP,netflix,Netflix,no-resolve"
+  - "GEOSITE,cn,全球直连"
+  - "GEOIP,cn,全球直连,no-resolve"
+  - "RULE-SET,Nonstandard_Port_Direct,非标端口"
+  - "MATCH,漏网之鱼"
